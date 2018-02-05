@@ -1,7 +1,6 @@
 # rpi-fan-controller
 A temperature dependant fan controller for the raspberry pi.
 
-
 ## Installation Guide
 
 Open up a terminal and run the following commands:
@@ -11,4 +10,16 @@ Open up a terminal and run the following commands:
     chmod u+x ./install.sh
     ./install.sh
     
-Once the install script has completed, you can delete the `rpi-fan-controller` folder.  
+Once the install script has completed, you can delete the `rpi-fan-controller` folder.
+
+## Circuit
+
+The circuit uses a PNP transistor as a switch, with a 1kΩ resistor on the base. It uses GPIO18/GEN1 as the the trigger by default.
+
+A simple circuit diagram:
+
+![circuit diagram](.images/diagram.png)
+
+Or a nice visual example:
+
+![fritzing image](.images/Fritzing.png)
