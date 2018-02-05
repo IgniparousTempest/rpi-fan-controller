@@ -1,6 +1,7 @@
 #include <libconfig.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <syslog.h>
 #include <wiringPi.h>
 
 /// The maximum temperature allowed before the fan turns on.
@@ -21,11 +22,14 @@ struct Config read_config() {
     config_t cfg;
     const char *str;
 
+    openlog("rpifan", LOG_ODELAY, LOG_USER);
+
     config_init(&cfg);
 
     // Load default if config file is missing
     if(!config_read_file(&cfg, "/usr/share/rpifan/config.cfg"))
     {
+        syslog(LOG_WARNING, "Config file could not be opened, using defaults for all values.");
         config.temp_threshold = temp_threshold_default;
         config.pin = pin_default;
         return config;
@@ -34,15 +38,20 @@ struct Config read_config() {
     // Read temperature threshold
     if(config_lookup_string(&cfg, "temperature_threshold", &str))
         config.temp_threshold = strtof (str, NULL); // Returns 0 if there is an error
-    else
+    else {
+        syslog(LOG_WARNING, "Config file is missing temp_threshold, using default.");
         config.temp_threshold = temp_threshold_default;
+    }
 
     // Read temperature threshold
     if(config_lookup_string(&cfg, "gpio_pin", &str))
         config.pin = (int) strtol (str, NULL, 10); // Returns 0 if there is an error
-    else
+    else {
+        syslog(LOG_WARNING, "Config file is missing pin, using default.");
         config.pin = pin_default;
+    }
 
+    closelog();
     return config;
 }
 
