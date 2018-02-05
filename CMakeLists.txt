@@ -7,4 +7,6 @@ set(SOURCE_FILES main.c)
 add_executable(rpifan ${SOURCE_FILES})
 
 find_library(wiringPi_LIB wiringPi)
-target_link_libraries(rpifan ${wiringPi_LIB})
+find_library(libconfig_LIB config)
+
+target_link_libraries(rpifan ${wiringPi_LIB} ${libconfig_LIB})
