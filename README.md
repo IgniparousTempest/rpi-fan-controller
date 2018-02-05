@@ -1,5 +1,5 @@
 # rpi-fan-controller
-A temperature dependant fan controller for the raspberry pi.
+A temperature dependant fan controller for the raspberry pi. By default the fan switches on if the CPU is above 40 °C (104 °F) (313.15 K), it checks the temperature every 10 minutes.
 
 ## Installation Guide
 
