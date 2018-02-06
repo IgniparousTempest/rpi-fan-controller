@@ -1,6 +1,7 @@
 #include <libconfig.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <syslog.h>
 #include <wiringPi.h>
 
@@ -90,12 +91,37 @@ void fan_off(int pin) {
     digitalWrite(pin, LOW);
 }
 
-int main() {
+/// Prints the help screen.
+/// \param program_name The name the user typed to execute the program.
+/// \param config The current config.
+void print_help(const char* program_name, const struct Config config) {
+    printf("Usage: %s\n", program_name);
+    printf("Controls the Raspberry Pi's fan.\n");
+    printf("Turns the fan on if the Raspberry Pi is on and the CPU temperature is above %.1f °C, "
+                   "turns off the fan otherwise. The fan is triggered on pin GEN%d.\n",
+           config.temp_threshold, config.pin);
+    printf("This functionality can be configured by editing /usr/share/rpifan/config.cfg.\n");
+    printf("\n");
+    printf("  -h, --help        displays this help screen.\n");
+}
+
+int main(int argc, char *argv[]) {
     struct Config config = read_config();
 
-    if (cpu_temp() > config.temp_threshold)
-        fan_on(config.pin);
-    else
-        fan_off(config.pin);
+    // Run program
+    if (argc <= 1) {
+        if (cpu_temp() > config.temp_threshold)
+            fan_on(config.pin);
+        else
+            fan_off(config.pin);
+    }
+    // Show help
+    else if (argc == 2 && (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0))
+        print_help(argv[0], config);
+    // Show error screen
+    else {
+        printf("%s: invalid input '%s'\n", argv[0], argv[1]);
+        printf("Try '%s --help' for more information.\n", argv[0]);
+    }
     return 0;
 }
