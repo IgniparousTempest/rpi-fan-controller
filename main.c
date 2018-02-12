@@ -98,10 +98,11 @@ void print_help(const char* program_name, const struct Config config) {
     printf("Usage: %s\n", program_name);
     printf("Controls the Raspberry Pi's fan.\n");
     printf("Turns the fan on if the Raspberry Pi is on and the CPU temperature is above %.1f °C, "
-                   "turns off the fan otherwise. The fan is triggered on pin GEN%d.\n",
-           config.temp_threshold, config.pin);
+                   "turns off the fan otherwise. The fan is triggered on pin GEN%d. The CPU is currently %.1f °C\n",
+           config.temp_threshold, config.pin, cpu_temp());
     printf("This functionality can be configured by editing /usr/share/rpifan/config.cfg.\n");
     printf("\n");
+    printf("  -f, --force STATE use 'on' or 'off' to force the fan state.\n");
     printf("  -h, --help        displays this help screen.\n");
 }
 
@@ -111,6 +112,13 @@ int main(int argc, char *argv[]) {
     // Run program
     if (argc <= 1) {
         if (cpu_temp() > config.temp_threshold)
+            fan_on(config.pin);
+        else
+            fan_off(config.pin);
+    }
+    // Force fan on or off
+    else if (argc == 3 && (strcmp(argv[1], "-f") == 0 || strcmp(argv[1], "--force") == 0) && (strcmp(argv[2], "on") == 0 || strcmp(argv[2], "off") == 0)) {
+        if (strcmp(argv[2], "on") == 0)
             fan_on(config.pin);
         else
             fan_off(config.pin);
