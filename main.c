@@ -98,7 +98,7 @@ void print_help(const char* program_name, const struct Config config) {
     printf("Usage: %s\n", program_name);
     printf("Controls the Raspberry Pi's fan.\n");
     printf("Turns the fan on if the Raspberry Pi is on and the CPU temperature is above %.1f °C, "
-                   "turns off the fan otherwise. The fan is triggered on pin GEN%d. The CPU is currently %.1f °C\n",
+                   "turns off the fan otherwise. The fan is triggered on pin GEN%d. The CPU is currently %.1f °C\.n",
            config.temp_threshold, config.pin, cpu_temp());
     printf("This functionality can be configured by editing /usr/share/rpifan/config.cfg.\n");
     printf("\n");
